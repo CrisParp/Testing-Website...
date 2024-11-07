@@ -113,17 +113,7 @@ function isValidMove(cell) {
 
 // Move the piece to the target cell
 function movePiece(piece, targetCell) {
-    const isKing = piece.dataset.king === "true";
-    const targetRow = parseInt(targetCell.dataset.row);
-
     targetCell.appendChild(piece);
-
-    // Check for king promotion if the piece reaches the last row
-    if ((piece.dataset.color === 'white' && targetRow === 7) ||
-        (piece.dataset.color === 'black' && targetRow === 0)) {
-        piece.dataset.king = true;
-        piece.classList.add('king');
-    }
 }
 
 // Toggle turns between players
@@ -137,8 +127,8 @@ function checkKingPromotion(cell) {
     const piece = cell.querySelector('.piece');
 
     if (piece && ((piece.dataset.color === 'white' && row === 7) || (piece.dataset.color === 'black' && row === 0))) {
-        piece.dataset.king = true;
-        piece.classList.add('king'); // Style to indicate king status
+        piece.dataset.king = "true"; // Set king status
+        piece.classList.add('king'); // Apply king CSS class for styling
     }
 }
 
