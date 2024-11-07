@@ -73,23 +73,23 @@ function handleCellClick(event) {
     const clickedRow = parseInt(clickedCell.dataset.row);
     const clickedCol = parseInt(clickedCell.dataset.col);
 
-    if (!clickedCell.classList.contains('dark')) return; // Only allow moves on dark squares
+    // Check if cell is dark
+    if (!clickedCell.classList.contains('dark')) return;
 
     const piece = clickedCell.children[0];
     const pieceColor = piece ? piece.classList.contains('white') ? 'white' : 'black' : null;
 
     // If a piece is selected
     if (selectedPiece) {
-        // Handle movement
         if (isValidMove(clickedRow, clickedCol)) {
             movePiece(clickedRow, clickedCol);
         } else {
             resetSelection();
         }
     } else {
-        // Select piece
+        // If no piece is selected, select a piece if it belongs to the current player
         if (pieceColor === null || (isWhiteTurn && pieceColor === 'black') || (!isWhiteTurn && pieceColor === 'white')) {
-            return; // Not this player's turn or no piece
+            return;
         }
 
         selectPiece(clickedCell, piece);
@@ -112,20 +112,18 @@ function resetSelection() {
     selectedCell = null;
 }
 
-// Check if move is valid
+// Check if move is valid (only 1-square diagonal move for now)
 function isValidMove(row, col) {
     const selectedRow = parseInt(selectedCell.dataset.row);
     const selectedCol = parseInt(selectedCell.dataset.col);
-
     const rowDiff = Math.abs(row - selectedRow);
     const colDiff = Math.abs(col - selectedCol);
 
-    // Valid move for a single step diagonal move
+    // Basic move validation for one square diagonally
     if (rowDiff === 1 && colDiff === 1) {
         return true;
     }
 
-    // Additional rules for capturing can be added here (jumping over opponent's pieces)
     return false;
 }
 
@@ -142,4 +140,3 @@ function movePiece(row, col) {
 // Event listeners for buttons
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('resetBtn').addEventListener('click', resetGame);
-

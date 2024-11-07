@@ -47,6 +47,10 @@ button {
     background-color: #4e3b31;
 }
 
+.selected {
+    border: 3px solid #ff0;
+}
+
 .piece {
     width: 40px;
     height: 40px;
@@ -56,10 +60,6 @@ button {
 
 .piece.white {
     background-color: #fff;
-}
-
-.selected {
-    border: 3px solid #ff0;
 }
 
 .timer {
