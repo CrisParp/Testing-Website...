@@ -3,38 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Tennis Rules & Hints</title>
+    <title>Russian Checkers Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Table Tennis Rules & Hints 2024</h1>
-    </header>
-    <main>
-        <section id="rules">
-            <h2>Rules</h2>
-            <ul>
-                <li>Players must serve the ball behind the end line.</li>
-                <li>The ball must bounce on your side before crossing the net.</li>
-                <li>Matches can be played as best of five or seven games.</li>
-                <li>Each game is won by the first player to reach 11 points.</li>
-                <li>Players switch sides after each game and in the deciding game after one player reaches 5 points.</li>
-            </ul>
-        </section>
-        <section id="hints">
-            <h2>Hints for Beginners</h2>
-            <ul>
-                <li>Practice your serve to gain an advantage.</li>
-                <li>Focus on footwork to position yourself better.</li>
-                <li>Work on your backhand and forehand equally.</li>
-                <li>Play regularly to build consistency.</li>
-                <li>Watch professional matches for technique and strategy.</li>
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>Created by Cristian.P &copy; 2024</p>
-    </footer>
+    <div class="menu">
+        <button id="startBtn">Start Game</button>
+        <button id="resetBtn">Reset Game</button>
+    </div>
+
+    <div class="game-container">
+        <div class="timer" id="timer">00:00</div>
+        <div id="board" class="board"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
