@@ -1,43 +1,24 @@
 body {
     font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
     margin: 0;
     background-color: #f4f4f4;
 }
 
-.menu {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-
-button {
-    margin-right: 10px;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.game-container {
-    position: relative;
-    margin-top: 60px;
-}
-
 .board {
     display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
     gap: 0;
-    margin-top: 20px;
     border: 2px solid #333;
+    margin-top: 20px;
 }
 
 .cell {
-    width: 50px;
-    height: 50px;
-    background-color: #f0d8b5;
+    width: 60px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,24 +28,26 @@ button {
     background-color: #4e3b31;
 }
 
-.selected {
-    border: 3px solid #ff0;
+.cell.light {
+    background-color: #f0d8b5;
 }
 
 .piece {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #333;
+    cursor: pointer;
 }
 
 .piece.white {
-    background-color: #fff;
+    background-color: #ffffff;
+    border: 2px solid #333;
 }
 
-.timer {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
+.piece.black {
+    background-color: #333333;
+}
+
+.selected {
+    outline: 3px solid yellow;
 }

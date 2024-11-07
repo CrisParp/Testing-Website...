@@ -1,142 +1,105 @@
-// Global variables
-let timerInterval;
-let timerSeconds = 0;
-let isWhiteTurn = true;
-let gameStarted = false;
-let boardState = [];
+// Game state variables
+let board = [];
 let selectedPiece = null;
-let selectedCell = null;
+let isWhiteTurn = true;
 
-// Initialize the board
+// Initialize board and pieces
 function initializeBoard() {
     const boardElement = document.getElementById('board');
     boardElement.innerHTML = '';
-    boardState = [];
+    board = [];
     
     for (let row = 0; row < 8; row++) {
-        let rowArr = [];
+        const rowArray = [];
         for (let col = 0; col < 8; col++) {
             const cell = document.createElement('div');
-            cell.classList.add('cell');
-            if ((row + col) % 2 !== 0) {
-                cell.classList.add('dark');
-                if (row < 3) {
-                    const piece = document.createElement('div');
-                    piece.classList.add('piece', 'white');
-                    cell.appendChild(piece);
-                } else if (row > 4) {
-                    const piece = document.createElement('div');
-                    piece.classList.add('piece');
-                    cell.appendChild(piece);
-                }
-            }
+            cell.classList.add('cell', (row + col) % 2 === 0 ? 'light' : 'dark');
             cell.dataset.row = row;
             cell.dataset.col = col;
             cell.addEventListener('click', handleCellClick);
-            rowArr.push(cell);
+            
+            if ((row + col) % 2 !== 0) { // Place pieces only on dark squares
+                if (row < 3) {
+                    const piece = createPiece('white');
+                    cell.appendChild(piece);
+                } else if (row > 4) {
+                    const piece = createPiece('black');
+                    cell.appendChild(piece);
+                }
+            }
+
+            rowArray.push(cell);
             boardElement.appendChild(cell);
         }
-        boardState.push(rowArr);
+        board.push(rowArray);
     }
 }
 
-// Start game
-function startGame() {
-    if (gameStarted) return;
-    gameStarted = true;
-    initializeBoard();
-    startTimer();
+// Create a piece element
+function createPiece(color) {
+    const piece = document.createElement('div');
+    piece.classList.add('piece', color);
+    piece.dataset.color = color;
+    return piece;
 }
 
-// Reset game
-function resetGame() {
-    gameStarted = false;
-    clearInterval(timerInterval);
-    timerSeconds = 0;
-    document.getElementById('timer').textContent = '00:00';
-    startGame();
-}
-
-// Start timer
-function startTimer() {
-    timerInterval = setInterval(() => {
-        timerSeconds++;
-        const minutes = Math.floor(timerSeconds / 60);
-        const seconds = timerSeconds % 60;
-        document.getElementById('timer').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }, 1000);
-}
-
-// Handle cell click (piece movement logic)
+// Handle cell click events
 function handleCellClick(event) {
-    const clickedCell = event.target;
-    const clickedRow = parseInt(clickedCell.dataset.row);
-    const clickedCol = parseInt(clickedCell.dataset.col);
+    const cell = event.currentTarget;
+    const piece = cell.querySelector('.piece');
 
-    // Check if cell is dark
-    if (!clickedCell.classList.contains('dark')) return;
-
-    const piece = clickedCell.children[0];
-    const pieceColor = piece ? piece.classList.contains('white') ? 'white' : 'black' : null;
-
-    // If a piece is selected
     if (selectedPiece) {
-        if (isValidMove(clickedRow, clickedCol)) {
-            movePiece(clickedRow, clickedCol);
-        } else {
-            resetSelection();
+        // Move the selected piece if it's a valid move
+        const validMove = isValidMove(cell);
+        if (validMove) {
+            movePiece(selectedPiece, cell);
+            toggleTurn();
         }
-    } else {
-        // If no piece is selected, select a piece if it belongs to the current player
-        if (pieceColor === null || (isWhiteTurn && pieceColor === 'black') || (!isWhiteTurn && pieceColor === 'white')) {
-            return;
-        }
-
-        selectPiece(clickedCell, piece);
+        deselectPiece();
+    } else if (piece && piece.dataset.color === (isWhiteTurn ? 'white' : 'black')) {
+        // Select a piece if it matches the current player's turn
+        selectPiece(piece);
     }
 }
 
 // Select a piece
-function selectPiece(cell, piece) {
+function selectPiece(piece) {
+    piece.classList.add('selected');
     selectedPiece = piece;
-    selectedCell = cell;
-    cell.classList.add('selected');
 }
 
-// Reset selection
-function resetSelection() {
-    if (selectedCell) {
-        selectedCell.classList.remove('selected');
+// Deselect the currently selected piece
+function deselectPiece() {
+    if (selectedPiece) {
+        selectedPiece.classList.remove('selected');
     }
     selectedPiece = null;
-    selectedCell = null;
 }
 
-// Check if move is valid (only 1-square diagonal move for now)
-function isValidMove(row, col) {
-    const selectedRow = parseInt(selectedCell.dataset.row);
-    const selectedCol = parseInt(selectedCell.dataset.col);
-    const rowDiff = Math.abs(row - selectedRow);
-    const colDiff = Math.abs(col - selectedCol);
+// Check if a move is valid
+function isValidMove(cell) {
+    if (!selectedPiece) return false;
 
-    // Basic move validation for one square diagonally
-    if (rowDiff === 1 && colDiff === 1) {
-        return true;
-    }
+    const startRow = parseInt(selectedPiece.parentElement.dataset.row);
+    const startCol = parseInt(selectedPiece.parentElement.dataset.col);
+    const targetRow = parseInt(cell.dataset.row);
+    const targetCol = parseInt(cell.dataset.col);
 
-    return false;
+    const rowDiff = Math.abs(targetRow - startRow);
+    const colDiff = Math.abs(targetCol - startCol);
+
+    return rowDiff === 1 && colDiff === 1 && !cell.querySelector('.piece'); // One-square diagonal move
 }
 
-// Move piece
-function movePiece(row, col) {
-    selectedCell.removeChild(selectedPiece);
-    boardState[row][col].appendChild(selectedPiece);
+// Move the piece to the target cell
+function movePiece(piece, targetCell) {
+    targetCell.appendChild(piece);
+}
 
-    // Toggle turn
+// Toggle turns between players
+function toggleTurn() {
     isWhiteTurn = !isWhiteTurn;
-    resetSelection();
 }
 
-// Event listeners for buttons
-document.getElementById('startBtn').addEventListener('click', startGame);
-document.getElementById('resetBtn').addEventListener('click', resetGame);
+// Initialize the game on page load
+window.onload = initializeBoard;
