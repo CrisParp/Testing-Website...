@@ -76,7 +76,7 @@ function deselectPiece() {
     selectedPiece = null;
 }
 
-// Validate move for regular and king pieces, including capturing logic
+// Check if a move is valid
 function isValidMove(targetCell) {
     if (!selectedPiece) return false;
 
@@ -88,32 +88,31 @@ function isValidMove(targetCell) {
     const colDiff = targetCol - startCol;
 
     const isKing = selectedPiece.dataset.king === "true";
+    const direction = selectedPiece.dataset.color === 'white' ? 1 : -1;
 
-    if (isKing) {
-        // Kings can move any number of squares in any direction
-        if (Math.abs(rowDiff) === Math.abs(colDiff)) {
-            return canCaptureAlongPath(startRow, startCol, targetRow, targetCol);
-        }
-    } else {
-        // Regular pieces can move only one square forward
-        const direction = selectedPiece.dataset.color === 'white' ? 1 : -1;
-
-        // Regular move
+    // Regular pieces move only one square forward but can capture backward
+    if (!isKing) {
+        // Regular move (one square forward only)
         if (Math.abs(rowDiff) === 1 && rowDiff === direction && Math.abs(colDiff) === 1 && !targetCell.querySelector('.piece')) {
-            return !hasMandatoryCapture(); // Check if no capture is available
+            return !hasMandatoryCapture(); // Ensure no captures available
         }
 
-        // Capture move (two squares forward)
-        if (Math.abs(rowDiff) === 2 && rowDiff === 2 * direction && Math.abs(colDiff) === 2) {
+        // Capture move (forward or backward, two squares)
+        if (Math.abs(rowDiff) === 2 && Math.abs(colDiff) === 2) {
             const middleRow = (startRow + targetRow) / 2;
             const middleCol = (startCol + targetCol) / 2;
             const middleCell = board[middleRow][middleCol];
             const middlePiece = middleCell.querySelector('.piece');
 
             if (middlePiece && middlePiece.dataset.color !== selectedPiece.dataset.color) {
-                middleCell.removeChild(middlePiece);
+                middleCell.removeChild(middlePiece); // Capture opponent
                 return true;
             }
+        }
+    } else {
+        // Kings move in any direction and capture along any number of squares
+        if (Math.abs(rowDiff) === Math.abs(colDiff) && canCaptureAlongPath(startRow, startCol, targetRow, targetCol)) {
+            return true;
         }
     }
 
@@ -142,8 +141,6 @@ function canCaptureFromCell(cell) {
 
     const row = parseInt(cell.dataset.row);
     const col = parseInt(cell.dataset.col);
-
-    // Check all four directions for a possible capture
     const directions = piece.dataset.king === "true" ?
         [[1, 1], [1, -1], [-1, 1], [-1, -1]] :
         [[piece.dataset.color === 'white' ? 1 : -1, 1], [piece.dataset.color === 'white' ? 1 : -1, -1]];
@@ -156,7 +153,7 @@ function canCaptureFromCell(cell) {
     return false;
 }
 
-// Check if a piece can capture along a path (used by kings for multi-square captures)
+// Check if a capture is possible along a path for kings or regular pieces
 function canCaptureAlongPath(startRow, startCol, targetRow, targetCol) {
     const rowStep = targetRow > startRow ? 1 : -1;
     const colStep = targetCol > startCol ? 1 : -1;
