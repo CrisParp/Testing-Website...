@@ -40,6 +40,7 @@ function createPiece(color) {
     const piece = document.createElement('div');
     piece.classList.add('piece', color);
     piece.dataset.color = color;
+    piece.dataset.king = false;
     return piece;
 }
 
@@ -53,6 +54,7 @@ function handleCellClick(event) {
         const validMove = isValidMove(cell);
         if (validMove) {
             movePiece(selectedPiece, cell);
+            checkKingPromotion(cell);
             toggleTurn();
         }
         deselectPiece();
@@ -76,7 +78,7 @@ function deselectPiece() {
     selectedPiece = null;
 }
 
-// Check if a move is valid
+// Check if a move is valid, including captures
 function isValidMove(cell) {
     if (!selectedPiece) return false;
 
@@ -84,21 +86,60 @@ function isValidMove(cell) {
     const startCol = parseInt(selectedPiece.parentElement.dataset.col);
     const targetRow = parseInt(cell.dataset.row);
     const targetCol = parseInt(cell.dataset.col);
+    const rowDiff = targetRow - startRow;
+    const colDiff = targetCol - startCol;
 
-    const rowDiff = Math.abs(targetRow - startRow);
-    const colDiff = Math.abs(targetCol - startCol);
+    // Regular move (one square diagonally)
+    if (Math.abs(rowDiff) === 1 && Math.abs(colDiff) === 1 && !cell.querySelector('.piece')) {
+        return true;
+    }
 
-    return rowDiff === 1 && colDiff === 1 && !cell.querySelector('.piece'); // One-square diagonal move
+    // Capture move (two squares diagonally)
+    if (Math.abs(rowDiff) === 2 && Math.abs(colDiff) === 2) {
+        const middleRow = (startRow + targetRow) / 2;
+        const middleCol = (startCol + targetCol) / 2;
+        const middleCell = board[middleRow][middleCol];
+        const middlePiece = middleCell.querySelector('.piece');
+
+        // Check if there's an opponent piece to capture
+        if (middlePiece && middlePiece.dataset.color !== selectedPiece.dataset.color) {
+            middleCell.removeChild(middlePiece); // Remove captured piece
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // Move the piece to the target cell
 function movePiece(piece, targetCell) {
+    const isKing = piece.dataset.king === "true";
+    const targetRow = parseInt(targetCell.dataset.row);
+
     targetCell.appendChild(piece);
+
+    // Check for king promotion if the piece reaches the last row
+    if ((piece.dataset.color === 'white' && targetRow === 7) ||
+        (piece.dataset.color === 'black' && targetRow === 0)) {
+        piece.dataset.king = true;
+        piece.classList.add('king');
+    }
 }
 
 // Toggle turns between players
 function toggleTurn() {
     isWhiteTurn = !isWhiteTurn;
+}
+
+// Check for king promotion
+function checkKingPromotion(cell) {
+    const row = parseInt(cell.dataset.row);
+    const piece = cell.querySelector('.piece');
+
+    if (piece && ((piece.dataset.color === 'white' && row === 7) || (piece.dataset.color === 'black' && row === 0))) {
+        piece.dataset.king = true;
+        piece.classList.add('king'); // Style to indicate king status
+    }
 }
 
 // Initialize the game on page load
