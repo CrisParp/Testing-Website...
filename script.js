@@ -117,15 +117,15 @@ function isValidMove(row, col) {
     const selectedRow = parseInt(selectedCell.dataset.row);
     const selectedCol = parseInt(selectedCell.dataset.col);
 
-    // Basic move validation (for now only single-step diagonal moves)
     const rowDiff = Math.abs(row - selectedRow);
     const colDiff = Math.abs(col - selectedCol);
 
+    // Valid move for a single step diagonal move
     if (rowDiff === 1 && colDiff === 1) {
-        return true; // Simple move
+        return true;
     }
 
-    // Capture logic (e.g., jumping over an opponent's piece)
+    // Additional rules for capturing can be added here (jumping over opponent's pieces)
     return false;
 }
 
