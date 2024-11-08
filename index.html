@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russian Checkers Game</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do You Love Me?</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    #popup {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      position: absolute;
+      width: 200px;
+      height: 100px;
+    }
+    #message {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>Russian Checkers</h1>
-    <div id="board" class="board"></div>
-    <script src="script.js"></script>
+  <div id="popup">
+    <p>Do you love me?</p>
+    <button onclick="respond(true)">Yes</button>
+    <button onclick="respond(false)">No</button>
+  </div>
+  <p id="message">I knew it!</p>
+
+  <script>
+    const popup = document.getElementById("popup");
+    const message = document.getElementById("message");
+
+    function respond(love) {
+      if (love) {
+        popup.style.display = "none";
+        message.style.display = "block";
+        setTimeout(() => {
+          window.close();
+        }, 5000);
+      } else {
+        randomPosition();
+      }
+    }
+
+    function randomPosition() {
+      const x = Math.floor(Math.random() * (window.innerWidth - popup.offsetWidth));
+      const y = Math.floor(Math.random() * (window.innerHeight - popup.offsetHeight));
+      popup.style.left = `${x}px`;
+      popup.style.top = `${y}px`;
+      popup.style.position = "absolute";
+    }
+
+    // Prevent closing the tab by disabling some keyboard shortcuts
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "F4" || (event.ctrlKey && event.key === "w")) {
+        event.preventDefault();
+      }
+    });
+
+    // Show the popup initially at a random position
+    randomPosition();
+  </script>
 </body>
 </html>
