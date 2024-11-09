@@ -36,20 +36,20 @@
 <body oncontextmenu="return false">
   <div id="popup">
     <p>Solve this equation:</p>
-    <p>((13×5)+ 
-      2
-      3 
-      4
-       −10
+    <p>( 
+      1000
+      (10 
+      3
+       )
       ​
-       + 
-      5184
+       )+( 
+      25
       ​
-       − 
-      4
-      168
+       −5)+(9−(2+3))+( 
+      3
+      6
       ​
-       +8×(2+1)−33)+27=69</p>
+       −1)</p>
     <input type="number" id="answer" placeholder="Your answer" />
     <button onclick="checkAnswer()">Submit</button>
     <button onclick="moveButton()">I don’t want to answer</button>
@@ -71,7 +71,7 @@
     document.addEventListener('paste', (e) => e.preventDefault());
 
     function checkAnswer() {
-      if (answerInput.value == "69") {
+      if (answerInput.value == "1") {
         message.innerText = "Good job! I knew you could solve it!";
         message.style.display = "block";
         popup.style.display = "none";
