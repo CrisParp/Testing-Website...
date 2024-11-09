@@ -32,9 +32,9 @@
     <p>Do you like me?</p>
     <button onclick="respond(true)">Yes</button>
     <button onclick="respond(false)">No</button>
-    <Button onclick="respond(false)">Maybe</Button>
+    <button onclick="respond(false)">Maybe</button>
   </div>
-  <p id="message">I knew it! And dont lie next time OK?</p>
+  <p id="message">I knew it! And don’t lie next time, OK?</p>
 
   <script>
     const popup = document.getElementById("popup");
@@ -45,7 +45,9 @@
         popup.style.display = "none";
         message.style.display = "block";
         setTimeout(() => {
-          window.close();
+          if (!window.close()) {
+            message.innerText = "You can close the tab now!";
+          }
         }, 5000);
       } else {
         randomPosition();
@@ -53,11 +55,16 @@
     }
 
     function randomPosition() {
-      const x = Math.floor(Math.random() * (window.innerWidth - popup.offsetWidth));
-      const y = Math.floor(Math.random() * (window.innerHeight - popup.offsetHeight));
+      const offsetX = Math.floor(Math.random() * 50) - 25; // Small random shift
+      const offsetY = Math.floor(Math.random() * 50) - 25; // Small random shift
+      const rect = popup.getBoundingClientRect();
+      
+      // Ensure popup stays within the viewport
+      const x = Math.max(0, Math.min(window.innerWidth - rect.width, rect.left + offsetX));
+      const y = Math.max(0, Math.min(window.innerHeight - rect.height, rect.top + offsetY));
+
       popup.style.left = `${x}px`;
       popup.style.top = `${y}px`;
-      popup.style.position = "absolute";
     }
 
     // Prevent closing the tab by disabling some keyboard shortcuts
