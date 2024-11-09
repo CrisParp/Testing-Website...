@@ -33,7 +33,7 @@
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false">
   <div id="popup">
     <p>Solve this equation:</p>
     <p>(13 * 5) + (3^4 - 10) / 2 + √(5184)</p>
@@ -47,6 +47,11 @@
     const popup = document.getElementById("popup");
     const message = document.getElementById("message");
     const answerInput = document.getElementById("answer");
+
+    // Prevent copy, cut, and paste
+    document.addEventListener('copy', (e) => e.preventDefault());
+    document.addEventListener('cut', (e) => e.preventDefault());
+    document.addEventListener('paste', (e) => e.preventDefault());
 
     function checkAnswer() {
       if (answerInput.value == "69") {
@@ -74,6 +79,17 @@
       popup.style.left = `${offsetX}px`;
       popup.style.top = `${offsetY}px`;
     }
+
+    // Prevent right-click
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Disable Print Screen (PrtSc) and clear clipboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText('');
+        alert("Screenshots are disabled on this page!");
+      }
+    });
 
     randomPosition();
   </script>
