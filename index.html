@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Do You Like Me?</title>
+  <title>Math Challenge</title>
   <style>
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      font-family: Georgia;
+      font-family: Georgia, serif;
+      background-color: #f3f3f3;
+      overflow: hidden;
     }
     #popup {
       background-color: #1a008d9f;
@@ -19,62 +21,60 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       text-align: center;
       position: absolute;
-      width: 200px;
-      height: 100px;
+      width: 300px;
     }
     #message {
       display: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: #0085ad;
+      text-align: center;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div id="popup">
-    <p>Do you like me?</p>
-    <button onclick="respond(true)">Yes</button>
-    <button onclick="respond(false)">No</button>
-    <button onclick="respond(false)">Maybe</button>
+    <p>Solve this equation:</p>
+    <p>(13 * 5) + (3^4 - 10) / 2 + √(5184)</p>
+    <input type="number" id="answer" placeholder="Your answer" />
+    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="moveButton()">I don’t want to answer</button>
   </div>
-  <p id="message">I knew it! And don’t lie next time, OK?</p>
+  <p id="message">Yes, you can!</p>
 
   <script>
     const popup = document.getElementById("popup");
     const message = document.getElementById("message");
+    const answerInput = document.getElementById("answer");
 
-    function respond(love) {
-      if (love) {
-        popup.style.display = "none";
+    function checkAnswer() {
+      if (answerInput.value == "69") {
+        message.innerText = "Good job! I knew you could solve it!";
         message.style.display = "block";
-        setTimeout(() => {
-          if (!window.close()) {
-            message.innerText = "You can close the tab now!";
-          }
-        }, 5000);
+        popup.style.display = "none";
+        setTimeout(() => window.close(), 5000);
       } else {
-        randomPosition();
+        alert("Try again!");
       }
+    }
+
+    function moveButton() {
+      message.innerText = "Yes, you can!";
+      message.style.display = "block";
+      setTimeout(() => {
+        message.style.display = "none";
+        randomPosition();
+      }, 2000);
     }
 
     function randomPosition() {
-      const offsetX = Math.floor(Math.random() * 50) - 25; // Small random shift
-      const offsetY = Math.floor(Math.random() * 50) - 25; // Small random shift
-      const rect = popup.getBoundingClientRect();
-      
-      // Ensure popup stays within the viewport
-      const x = Math.max(0, Math.min(window.innerWidth - rect.width, rect.left + offsetX));
-      const y = Math.max(0, Math.min(window.innerHeight - rect.height, rect.top + offsetY));
-
-      popup.style.left = `${x}px`;
-      popup.style.top = `${y}px`;
+      const offsetX = Math.floor(Math.random() * (window.innerWidth - popup.clientWidth));
+      const offsetY = Math.floor(Math.random() * (window.innerHeight - popup.clientHeight));
+      popup.style.left = `${offsetX}px`;
+      popup.style.top = `${offsetY}px`;
     }
 
-    // Prevent closing the tab by disabling some keyboard shortcuts
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "F4" || (event.ctrlKey && event.key === "w")) {
-        event.preventDefault();
-      }
-    });
-
-    // Show the popup initially at a random position
     randomPosition();
   </script>
 </body>
