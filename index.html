@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Challenge</title>
+  <title>The Question</title>
   <style>
     body {
       display: flex;
@@ -11,7 +11,7 @@
       align-items: center;
       height: 100vh;
       font-family: Georgia, serif;
-      background-color: #f3f3f3;
+      background-color: #f3f3f3ef;
       overflow: hidden;
     }
     #popup {
@@ -27,7 +27,7 @@
       display: none;
       font-size: 18px;
       font-weight: bold;
-      color: #0085ad;
+      color: #0011ffa1;
       text-align: center;
       margin-top: 20px;
     }
@@ -36,7 +36,20 @@
 <body oncontextmenu="return false">
   <div id="popup">
     <p>Solve this equation:</p>
-    <p>(13 * 5) + (3^4 - 10) / 2 + √(5184)</p>
+    <p>((13×5)+ 
+      2
+      3 
+      4
+       −10
+      ​
+       + 
+      5184
+      ​
+       − 
+      4
+      168
+      ​
+       +8×(2+1)−33)+27=69</p>
     <input type="number" id="answer" placeholder="Your answer" />
     <button onclick="checkAnswer()">Submit</button>
     <button onclick="moveButton()">I don’t want to answer</button>
@@ -69,7 +82,7 @@
     }
 
     function moveButton() {
-      message.innerText = "Yes, you can!";
+      message.innerText = "Yes, you do!";
       message.style.display = "block";
       setTimeout(() => {
         message.style.display = "none";
