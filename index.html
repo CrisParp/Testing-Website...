@@ -11,12 +11,12 @@
       align-items: center;
       height: 100vh;
       font-family: Georgia, serif;
-      background-color: #f3f3f3ef;
+      background-color: rgba(123, 123, 123);
       overflow: hidden;
     }
     #popup {
       background-color: #1a008d9f;
-      border: 1px solid #0085ad;
+      border: 1px solid rgb(123, 255, 255);
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       text-align: center;
@@ -75,7 +75,7 @@
         message.innerText = "Good job! I knew you could solve it!";
         message.style.display = "block";
         popup.style.display = "none";
-        setTimeout(() => window.close(), 5000);
+        setTimeout(() => window.close(), 3000);
       } else {
         wrongSound.play(); // Play the "Wrong" sound
       }
