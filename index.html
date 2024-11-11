@@ -15,18 +15,29 @@
       overflow: hidden;
       perspective: 1000px;
     }
-    #popup {
+    .cube {
+      position: relative;
+      width: 200px;
+      transform-style: preserve-3d;
+    }
+    .cube-face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
       background-color: #1a008d9f;
       border: 1px solid rgb(123, 255, 255);
-      padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      transform-style: preserve-3d;
-      animation: rotateCube 3s infinite linear;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+    .cube-face.front { transform: translateZ(100px); }
+    .cube-face.back { transform: rotateY(180deg) translateZ(100px); }
+    .cube-face.left { transform: rotateY(-90deg) translateZ(100px); }
+    .cube-face.right { transform: rotateY(90deg) translateZ(100px); }
+    .cube-face.top { transform: rotateX(90deg) translateZ(100px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
     #message {
       display: none;
       font-size: 18px;
@@ -35,36 +46,37 @@
       text-align: center;
       margin-top: 20px;
     }
-    @keyframes rotateCube {
-      from {
-        transform: rotateX(0deg) rotateY(0deg);
-      }
-      to {
-        transform: rotateX(180deg) rotateY(180deg);
-      }
-    }
   </style>
 </head>
 <body oncontextmenu="return false">
-  <div id="popup">
-    <p>Solve this equation:</p>
-    <p>( 
-      1000
-      (10 
-      3
-       )
-      ​
-       )+( 
-      25
-      ​
-       −5)+(9−(2+3))+( 
-      3
-      6
-      ​
-       −1)</p>
-    <input type="number" id="answer" placeholder="Your answer" />
-    <button onclick="checkAnswer()">Submit</button>
-    <button onclick="moveButton()">I don’t want to answer</button>
+  <div class="cube">
+    <div class="cube-face front">
+      <div>
+        <p>Solve this equation:</p>
+        <p>( 
+          1000
+          (10 
+          3
+           )
+          ​
+           )+( 
+          25
+          ​
+           −5)+(9−(2+3))+( 
+          3
+          6
+          ​
+           −1)</p>
+        <input type="number" id="answer" placeholder="Your answer" />
+        <button onclick="checkAnswer()">Submit</button>
+        <button onclick="moveButton()">I don’t want to answer</button>
+      </div>
+    </div>
+    <div class="cube-face back"></div>
+    <div class="cube-face left"></div>
+    <div class="cube-face right"></div>
+    <div class="cube-face top"></div>
+    <div class="cube-face bottom"></div>
   </div>
   <p id="message">Yes, you do!</p>
 
@@ -72,7 +84,6 @@
   <audio id="wrongSound" src="https://github.com/CrisParp/Testing-Website.../raw/refs/heads/main/psych_-thats-the-wrong-number.mp3" preload="auto"></audio>
 
   <script>
-    const popup = document.getElementById("popup");
     const message = document.getElementById("message");
     const answerInput = document.getElementById("answer");
     const wrongSound = document.getElementById("wrongSound");
@@ -86,7 +97,7 @@
       if (answerInput.value == "1") {
         message.innerText = "Good job! I knew you could solve it!";
         message.style.display = "block";
-        popup.style.display = "none";
+        document.querySelector(".cube").style.display = "none";
         setTimeout(() => window.close(), 3000);
       } else {
         wrongSound.play(); // Play the "Wrong" sound
@@ -103,6 +114,7 @@
     }
 
     function randomPosition() {
+      const popup = document.querySelector(".cube");
       const offsetX = Math.floor(Math.random() * (window.innerWidth - popup.clientWidth));
       const offsetY = Math.floor(Math.random() * (window.innerHeight - popup.clientHeight));
       popup.style.left = `${offsetX}px`;
